@@ -9,21 +9,17 @@
 #include <Arduino.h>
 #include "secrets.h"
 
-
 #define RELEASE true
 #define SERVER
 const int FW_VERSION = 2020062901;
-int DEBUGLEVEL = 2;     // set between 0 and 5. This value will be overridden by dynamic network configuration json if it has a higher value
-
+int DEBUGLEVEL = 2; // set between 0 and 5. This value will be overridden by dynamic network configuration json if it has a higher value
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////// Firmware update over the air (FOTA) SECTION///////////////////////////////////////////????//////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-#include <HTTPUpdate.h>                                                                /// year_month_day_counternumber 2019 is the year, 04 is the month, 17 is the day 01 is the in day release
+#include <HTTPUpdate.h>                                                                              /// year_month_day_counternumber 2019 is the year, 04 is the month, 17 is the day 01 is the in day release
 const char *fwUrlBase = "https://raw.githubusercontent.com/theDontKnowGuy/GreenPlanet/master/fota/"; /// put your server URL where the *.bin & version files are saved in your http ( Apache? ) server
-
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////// NETWORK SECTION/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -51,7 +47,6 @@ const int httpsPort = 443;
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////// WEBSERVER SECTION///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 #if defined(SERVER)
 
@@ -81,7 +76,6 @@ char *serverMDNSname = "GreenPlanet"; //clients will look for http://GreenPlanet
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 bool log2Serial = true; //move to false in production to save some time
-
 
 //char loggerHost[100] = "192.168.1.200";
 //String logTarget =     "/MyRFDevicesHub/MyRFDevicesHubLogger.php"; /// leave empty if no local logging server (will only Serial.print logs)
@@ -125,8 +119,8 @@ char *serverDataUpdateHost = "raw.githubusercontent.com";
 int serverDataUpdatePort = 443;
 
 #if (RELEASE)
-String serverDataUpdateURI = "/theDontKnowGuy/GreenPlanet/master/configuration/GreenPlanetConfig.json";
-String dataUpdateURI_fallback = "/theDontKnowGuy/GreenPlanet/master/configuration/GreenPlanetConfig.json"; /// see example json file in github. leave
+String serverDataUpdateURI = "/theDontKnowGuy/GreenPlanetGideoniFamily/master/configuration/GreenPlanetConfig.json?token=AJW32XOMBUIIQ4WAFSOSLL27ABZHS";
+String dataUpdateURI_fallback = "/theDontKnowGuy/GreenPlanetGideoniFamily/master/configuration/GreenPlanetConfig.json?token=AJW32XOMBUIIQ4WAFSOSLL27ABZHS"; /// see example json file in github. leave
 #else
 String serverDataUpdateURI = "/theDontKnowGuy/GreenPlanet/master/configuration/GreenPlanetConfig_dev.json";
 String dataUpdateURI_fallback = "/theDontKnowGuy/GreenPlanet/master/configuration/GreenPlanetConfig_dev.json"; /// see example json file in github. leave
@@ -134,7 +128,7 @@ String dataUpdateURI_fallback = "/theDontKnowGuy/GreenPlanet/master/configuratio
 
 char *dataUpdateHost_fallback = "raw.githubusercontent.com";
 int dataUpdatePort_fallback = 443;
-String dataUpdateURI_fallback_local = "/GreenPlanet/GreenPlanetConfig.json";                               /// see example json file in github. leave value empty if no local server
+String dataUpdateURI_fallback_local = "/GreenPlanet/GreenPlanetConfig.json"; /// see example json file in github. leave value empty if no local server
 
 int ServerConfigurationRefreshRate = 60;
 
@@ -241,7 +235,7 @@ void IRAM_ATTR resetModule()
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #define uS_TO_S_FACTOR 1000000ULL /* Conversion factor for micro seconds to seconds */
-int WakeUpSensorThreshold = 50;    /* Greater the value, more the sensitivity */
+int WakeUpSensorThreshold = 50;   /* Greater the value, more the sensitivity */
 touch_pad_t touchPin;
 int delayBetweenExecs = 3;
 int sleepAfterExec = 1800;
@@ -303,8 +297,16 @@ String serverConfiguration = "";
 
 void setup()
 {
-  pinMode(red, OUTPUT);  pinMode(green, OUTPUT);  pinMode(blue, OUTPUT); pinMode(kIrLed, OUTPUT); digitalWrite(kIrLed, LOW);
-  digitalWrite(blue, HIGH); vTaskDelay(100); digitalWrite(blue, LOW); digitalWrite(red, LOW); digitalWrite(green, LOW);
+  pinMode(red, OUTPUT);
+  pinMode(green, OUTPUT);
+  pinMode(blue, OUTPUT);
+  pinMode(kIrLed, OUTPUT);
+  digitalWrite(kIrLed, LOW);
+  digitalWrite(blue, HIGH);
+  vTaskDelay(100);
+  digitalWrite(blue, LOW);
+  digitalWrite(red, LOW);
+  digitalWrite(green, LOW);
 
   // Hardeware Watchdog
   timer = timerBegin(0, 80, true);                  //timer 0, div 80
@@ -343,13 +345,25 @@ void setup()
   logThis(0, "This is boot No. " + String(bootCount), 3);
   if (bootCount == 1)
   {
-    digitalWrite(red, HIGH); vTaskDelay(100); digitalWrite(red, LOW); vTaskDelay(50); digitalWrite(red, HIGH); vTaskDelay(100); digitalWrite(red, LOW); vTaskDelay(50); digitalWrite(red, HIGH); vTaskDelay(100); digitalWrite(red, LOW); vTaskDelay(50);
+    digitalWrite(red, HIGH);
+    vTaskDelay(100);
+    digitalWrite(red, LOW);
+    vTaskDelay(50);
+    digitalWrite(red, HIGH);
+    vTaskDelay(100);
+    digitalWrite(red, LOW);
+    vTaskDelay(50);
+    digitalWrite(red, HIGH);
+    vTaskDelay(100);
+    digitalWrite(red, LOW);
+    vTaskDelay(50);
   }
   if (bootCount > 48)
     ESP.restart();
 
   Serial.printf("\n" D_STR_IRRECVDUMP_STARTUP "\n", kRecvPin);
-  if (isServer) irrecv.enableIRIn(); // Start the receiver
+  if (isServer)
+    irrecv.enableIRIn(); // Start the receiver
 
   parseConfiguration(loadConfiguration());
 
@@ -372,46 +386,53 @@ void setup()
 #if defined(SERVER)
 
   xTaskCreatePinnedToCore(
-    serverOtherFunctions, "serverOtherFunctions" // A name just for humans
-    ,
-    7000 // This stack size can be checked & adjusted by reading the Stack Highwater
-    ,
-    NULL, 0 // Priority, with 3 (configMAX_PRIORITIES - 1) being the highest, and 0 being the lowest.
-    ,
-    NULL, 1);
+      serverOtherFunctions, "serverOtherFunctions" // A name just for humans
+      ,
+      7000 // This stack size can be checked & adjusted by reading the Stack Highwater
+      ,
+      NULL, 0 // Priority, with 3 (configMAX_PRIORITIES - 1) being the highest, and 0 being the lowest.
+      ,
+      NULL, 1);
 
   xTaskCreatePinnedToCore(
-    webServerFunction, "webServerFunction" // A name just for humans
-    ,
-    7000 // This stack size can be checked & adjusted by reading the Stack Highwater
-    ,
-    NULL, 3 // Priority, with 3 (configMAX_PRIORITIES - 1) being the highest, and 0 being the lowest.
-    ,
-    NULL, 0);
+      webServerFunction, "webServerFunction" // A name just for humans
+      ,
+      7000 // This stack size can be checked & adjusted by reading the Stack Highwater
+      ,
+      NULL, 3 // Priority, with 3 (configMAX_PRIORITIES - 1) being the highest, and 0 being the lowest.
+      ,
+      NULL, 0);
 
 #else
   planDispatcher();
-  if (wakeup_reason == ESP_SLEEP_WAKEUP_TOUCHPAD) {logThis(1, "Executing Plan becuase woke up by touchpad",2);execPlan(3);} // on wakeup by touchpad - play ir plan for testing
+  if (wakeup_reason == ESP_SLEEP_WAKEUP_TOUCHPAD)
+  {
+    logThis(1, "Executing Plan becuase woke up by touchpad", 2);
+    execPlan(3);
+  }                            // on wakeup by touchpad - play ir plan for testing
   gotoSleep(calcTime2Sleep()); ///is this order right ????????
 #endif
 } //setup
 
-
 #if defined(SERVER)
-void webServerFunction(void *pvParameters) {
+void webServerFunction(void *pvParameters)
+{
 
-  (void) pvParameters;
-  for (;;) {
+  (void)pvParameters;
+  for (;;)
+  {
     server.handleClient();
     vTaskDelay(10 / portTICK_RATE_MS);
     timerWrite(timer, 0); //reset timer (feed watchdog)
   }
 }
 
-void serverOtherFunctions(void *pvParameters) {
+void serverOtherFunctions(void *pvParameters)
+{
 
-  (void) pvParameters;
-  for (;;) {
+  (void)pvParameters;
+  for (;;)
+  {
     planDispatcher();
     blinkLiveLed();
     timerWrite(timer, 0); //reset timer (feed watchdog)

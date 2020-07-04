@@ -1,5 +1,5 @@
 {
-  "ConfigurationVersion": 205,
+  "ConfigurationVersion": 905,
   "targetFWVersion_client": 2020062901,
   "GeneralConfiguration": {
     "DEBUGLEVEL": 2,
@@ -10,7 +10,7 @@
     "daylightOffset_sec": 3600,
     "gmtOffset_sec": 10800,
     "dataUpdateHost": "raw.githubusercontent.com",
-    "dataUpdateURI": "/theDontKnowGuy/GreenPlanet/master/configuration/GreenPlanetConfig.json",
+    "dataUpdateURI": "/theDontKnowGuy/GreenPlanetGideoniFamily/master/configuration/GreenPlanetConfig.json?token=AJW32XOMBUIIQ4WAFSOSLL27ABZHS",
     "dataUpdatePort": 443,
     "loggerHost": "maker.ifttt.com",
     "logTarget": "/trigger/GreenPlanet2/with/key/cop304vj9Hmdlf547a-zbB",
