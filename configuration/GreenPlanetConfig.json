@@ -23,11 +23,11 @@
   },
   "Devices": [
     {
-      "DeviceMAC": "24:6F:28:9E:49:5C",
-      "deviceID": "700",
+      "DeviceMAC": "24:6F:28:A8:23:F0",
+      "deviceID": "400",
       "deviceGroup": "Main floor",
-      "deviceLocation": "clinic",
-      "memberInOperationPlans": "3,4,6,7"
+      "deviceLocation": "Ayala",
+      "memberInOperationPlans": ""
     }
   ],
   "operationPlans": [
