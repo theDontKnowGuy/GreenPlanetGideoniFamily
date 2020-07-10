@@ -27,7 +27,9 @@
       "deviceID": "400",
       "deviceGroup": "Main floor",
       "deviceLocation": "Ayala",
-      "memberInOperationPlans": ""
+      "memberInOperationPlans": "",
+      "IRLed": 25,
+      "DHT":10
     }
   ],
   "operationPlans": [
