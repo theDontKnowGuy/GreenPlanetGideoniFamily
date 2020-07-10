@@ -28,8 +28,7 @@
       "deviceGroup": "Main floor",
       "deviceLocation": "Ayala",
       "memberInOperationPlans": "",
-      "IRLed": 25,
-      "DHT":10
+      "irled": 25
     }
   ],
   "operationPlans": [
